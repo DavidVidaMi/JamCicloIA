@@ -1,4 +1,4 @@
-## Ideas for a game having as motive AI
+## Ideas for a game having AI as motive
 
 - First person scape room with an AI companion who you can ask for help.
 - Horror game where you have to run away from an AI who is chasing you.
