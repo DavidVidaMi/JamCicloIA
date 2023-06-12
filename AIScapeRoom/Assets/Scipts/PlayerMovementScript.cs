@@ -17,8 +17,13 @@ public class PlayerMovementScript : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
-    
+    private PlayerState state;
+    public Animator animator;
 
+    private void Start()
+    {
+        SetState(PlayerState.Idle);
+    }
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -37,6 +42,17 @@ public class PlayerMovementScript : MonoBehaviour
 
         move = move.normalized;
 
+        if(move != Vector3.zero)
+        {
+            SetState(PlayerState.Walk);
+            Debug.Log("Ando");
+        }
+        else
+        {
+            SetState(PlayerState.Idle);
+            Debug.Log("No ando");
+        }
+
         controller.Move(move * speed * Time.deltaTime);
 
         if(isGrounded && Input.GetButtonDown("Jump"))
@@ -48,5 +64,22 @@ public class PlayerMovementScript : MonoBehaviour
 
         //Multiplicamos velocity por Time.deltaTime outra vez porque así funciona a ecuación da caida libre
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void SetState(PlayerState newState)
+    {
+        if (state != newState)
+        {
+            animator.ResetTrigger("Idle");
+            animator.ResetTrigger("Walk");
+            state = newState;
+            animator.SetTrigger($"{newState}");
+        }
+    }
+
+    public enum PlayerState
+    {
+        Idle,
+        Walk
     }
 }
