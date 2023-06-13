@@ -39,6 +39,7 @@ public class PlayerInteract : MonoBehaviour
             pickedObject = CheckForInteractables();
             if (pickedObject != null)
             {
+                PlayerMovementScript.instance.interacting = true;
                 Debug.Log("Hai obxecto");
                 pickedObject.parent = transform;
                 pickedObject.GetComponent<Rigidbody>().isKinematic = true;

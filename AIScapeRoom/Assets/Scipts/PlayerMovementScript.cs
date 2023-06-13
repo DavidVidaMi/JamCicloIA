@@ -14,11 +14,21 @@ public class PlayerMovementScript : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
+    public bool interacting = false;
+
     Vector3 velocity;
     bool isGrounded;
+    bool animationFinished = true;
 
     private PlayerState state;
     public Animator animator;
+
+    public static PlayerMovementScript instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -44,20 +54,39 @@ public class PlayerMovementScript : MonoBehaviour
 
         if(move != Vector3.zero)
         {
-            SetState(PlayerState.Walk);
-            Debug.Log("Ando");
+            if (isGrounded)
+            {
+                SetState(PlayerState.Walk);
+            }
         }
         else
         {
-            SetState(PlayerState.Idle);
-            Debug.Log("No ando");
+            if (isGrounded)
+            {
+                SetState(PlayerState.Idle);
+            }
+        }
+
+        if (interacting)
+        {
+            interacting = false;
+            SetState(PlayerState.Interact);
         }
 
         controller.Move(move * speed * Time.deltaTime);
 
-        if(isGrounded && Input.GetButtonDown("Jump"))
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+            if (state == PlayerState.Walk)
+            {
+                SetState(PlayerState.Jump);
+                velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+            }
+            else if (state == PlayerState.Idle && animationFinished)
+            {
+                SetState(PlayerState.StandJump);
+                StartCoroutine("JumpAction");
+            }
         }
 
         velocity.y += gravity * Time.deltaTime;
@@ -66,12 +95,24 @@ public class PlayerMovementScript : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
+    IEnumerator JumpAction()
+    {
+        animationFinished = false;
+        yield return new WaitForSeconds(0.75f);
+
+        velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+        animationFinished = true;
+    }
+
     private void SetState(PlayerState newState)
     {
         if (state != newState)
         {
             animator.ResetTrigger("Idle");
             animator.ResetTrigger("Walk");
+            animator.ResetTrigger("Jump");
+            animator.ResetTrigger("StandJump");
+            animator.ResetTrigger("Interact");
             state = newState;
             animator.SetTrigger($"{newState}");
         }
@@ -80,6 +121,9 @@ public class PlayerMovementScript : MonoBehaviour
     public enum PlayerState
     {
         Idle,
-        Walk
+        Walk,
+        Jump,
+        StandJump,
+        Interact
     }
 }
