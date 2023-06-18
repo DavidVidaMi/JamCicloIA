@@ -7,6 +7,7 @@ public class PlayerMovementScript : MonoBehaviour
     public CharacterController controller;
 
     public float speed = 12f;
+    public float speedMultiplier = 3f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
 
@@ -89,13 +90,13 @@ public class PlayerMovementScript : MonoBehaviour
             }
         }
 
-        if (isGrounded && Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            speed = speed * 2;
+            speed = speed * speedMultiplier;
         }
-        else if(isGrounded && Input.GetKeyUp(KeyCode.LeftShift))
+        else if(Input.GetKeyUp(KeyCode.LeftShift))
         {
-            speed = speed / 2;
+            speed = speed / speedMultiplier;
         }
 
 

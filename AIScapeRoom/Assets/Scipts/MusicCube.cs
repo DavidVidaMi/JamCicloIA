@@ -5,9 +5,15 @@ using UnityEngine;
 public class MusicCube : MonoBehaviour
 {
     public string noteValue;
+    public AudioClip audioClip;
+    private AudioSource audioSource;
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     public string PlayNote()
     {
-        //Aquí sonaría o audioclip da nota musical
+        audioSource.PlayOneShot(audioClip);
         return noteValue;
     }
 }

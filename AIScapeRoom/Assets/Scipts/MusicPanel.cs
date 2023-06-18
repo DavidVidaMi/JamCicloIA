@@ -6,7 +6,10 @@ public class MusicPanel : MonoBehaviour
 {
     public Animator ballFloorAnimator;
     public GameObject Ball;
+    public AudioClip goodSound;
+    public AudioClip badSound;
 
+    private AudioSource audioSource;
     private string correctMelody = "MIFASOLDOREMIFA";
     private int noteCounter;
     private string currentNote;
@@ -17,6 +20,11 @@ public class MusicPanel : MonoBehaviour
     private void Awake()
     {
         instance = this;
+    }
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void CubePlayed(MusicCube currentCube)
@@ -39,14 +47,14 @@ public class MusicPanel : MonoBehaviour
         noteCounter = 0;
         if(currentMelody.Equals(correctMelody))
         {
-            //continua a cansión un cacho
+            audioSource.PlayOneShot(goodSound);
             PlayerInteract.instance.melodyPlayedCorrectly = true;
             ballFloorAnimator.SetTrigger("ActivateTrap");
             Ball.GetComponent<Rigidbody>().isKinematic = false;
         }
         else
         {
-            //Sona sonidiño de error
+            audioSource.PlayOneShot(badSound);
         }
         currentMelody = "";
     }
