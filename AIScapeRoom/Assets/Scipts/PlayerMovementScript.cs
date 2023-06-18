@@ -89,6 +89,16 @@ public class PlayerMovementScript : MonoBehaviour
             }
         }
 
+        if (isGrounded && Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            speed = speed * 2;
+        }
+        else if(isGrounded && Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            speed = speed / 2;
+        }
+
+
         velocity.y += gravity * Time.deltaTime;
 
         //Multiplicamos velocity por Time.deltaTime outra vez porque así funciona a ecuación da caida libre
