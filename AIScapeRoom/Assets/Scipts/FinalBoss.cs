@@ -7,6 +7,7 @@ public class FinalBoss : MonoBehaviour
 {
     public Transform playerTransform;
     public float speed = 1;
+    public GameObject player;
 
     private AudioSource audioSource;
     public AudioClip audioClip;
@@ -16,12 +17,6 @@ public class FinalBoss : MonoBehaviour
     public Image youDiedPanel;
 
     private bool ded = false;
-
-    private void Start()
-    {
-        audioSource = GetComponent<AudioSource>();
-        audioSource.PlayOneShot(audioClip);
-    }
     void Update()
     {
         transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, speed * Time.deltaTime);
@@ -48,6 +43,8 @@ public class FinalBoss : MonoBehaviour
         {
             ded = true;
             youDiedGO.SetActive(true);
+            player.GetComponent<AudioSource>().Pause();
+            player.GetComponentInChildren<MouseLook>().enabled = false;
         }
     }
 

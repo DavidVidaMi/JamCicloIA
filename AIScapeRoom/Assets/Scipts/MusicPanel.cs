@@ -9,11 +9,15 @@ public class MusicPanel : MonoBehaviour
     public AudioClip goodSound;
     public AudioClip badSound;
 
+    public AudioSource playerAudio;
+
     private AudioSource audioSource;
     private string correctMelody = "MIFASOLDOREMIFA";
     private int noteCounter;
     private string currentNote;
     private string currentMelody = "";
+
+    private float goodSoundDuration = 16f;
 
     public static MusicPanel instance;
 
@@ -47,6 +51,8 @@ public class MusicPanel : MonoBehaviour
         noteCounter = 0;
         if(currentMelody.Equals(correctMelody))
         {
+            playerAudio.Pause();
+            StartCoroutine(WaitAndUnpause());
             audioSource.PlayOneShot(goodSound);
             PlayerInteract.instance.melodyPlayedCorrectly = true;
             ballFloorAnimator.SetTrigger("ActivateTrap");
@@ -57,5 +63,11 @@ public class MusicPanel : MonoBehaviour
             audioSource.PlayOneShot(badSound);
         }
         currentMelody = "";
+    }
+
+    private IEnumerator WaitAndUnpause()
+    {
+        yield return new WaitForSeconds(goodSoundDuration);
+        playerAudio.UnPause();
     }
 }
