@@ -43,7 +43,7 @@ public class FinalBoss : MonoBehaviour
         {
             ded = true;
             youDiedGO.SetActive(true);
-            player.GetComponent<AudioSource>().Pause();
+            player.GetComponent<AudioSource>().enabled = false;
             player.GetComponentInChildren<MouseLook>().enabled = false;
         }
     }
